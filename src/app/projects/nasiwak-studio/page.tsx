@@ -166,7 +166,7 @@ export default function NasiwakCaseStudy() {
                         <div className="grid sm:grid-cols-2 gap-8">
                             <div className="bg-gradient-to-br from-red-500/10 to-transparent p-8 rounded-3xl border border-red-500/20">
                                 <h3 className="text-xl font-medium text-white mb-3">Model Context Consistency</h3>
-                                <p className="text-zinc-400 leading-relaxed">Ensured predictions from different models don't interfere with each other during live session switching between floor plan and electrical modes.</p>
+                                <p className="text-zinc-400 leading-relaxed">Ensured predictions from different models don&apos;t interfere with each other during live session switching between floor plan and electrical modes.</p>
                             </div>
                             <div className="bg-gradient-to-br from-orange-500/10 to-transparent p-8 rounded-3xl border border-orange-500/20">
                                 <h3 className="text-xl font-medium text-white mb-3">Coordinate System Mapping</h3>

@@ -225,7 +225,7 @@ export default function OCRRPASuiteCaseStudy() {
                                     <li><strong>Deskewing:</strong> Hough transform for line detection and rotation correction</li>
                                     <li><strong>Contrast enhancement:</strong> CLAHE (Contrast Limited Adaptive Histogram Equalization)</li>
                                     <li><strong>Noise reduction:</strong> Bilateral filtering, Gaussian blur, morphological operations</li>
-                                    <li><strong>Binarization:</strong> Otsu's method for optimal threshold selection</li>
+                                    <li><strong>Binarization:</strong> Otsu&apos;s method for optimal threshold selection</li>
                                 </ul>
                             </div>
 

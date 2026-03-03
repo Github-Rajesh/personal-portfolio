@@ -376,7 +376,7 @@ export default function LanguageLearningAICaseStudy() {
                     >
                         <h2 className="text-3xl font-bold mb-8">Project Impact</h2>
                         <p className="text-lg leading-relaxed text-zinc-300 mb-6">
-                            Your FastAPI RAG service demonstrates expertise in modern AI/ML architecture, LLM integration, semantic search, and production engineering. You're not implementing boilerplate auth or UI—you're building the core AI engine that powers every query.
+                            Your FastAPI RAG service demonstrates expertise in modern AI/ML architecture, LLM integration, semantic search, and production engineering. You&apos;re not implementing boilerplate auth or UI—you&apos;re building the core AI engine that powers every query.
                         </p>
                         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-8">
                             <p className="text-base text-zinc-400 italic">

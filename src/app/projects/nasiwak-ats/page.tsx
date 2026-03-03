@@ -206,7 +206,7 @@ export default function NasiwakATSCaseStudy() {
                                 <ul className="space-y-2 list-disc list-inside">
                                     <li><strong>spaCy pipeline:</strong> en_core_web_sm model for NER, tokenization, and dependency parsing</li>
                                     <li><strong>Custom entity patterns:</strong> Domain-specific extraction for skills, certifications, experience</li>
-                                    <li><strong>Lemmatization &amp; normalization:</strong> Standardize variations (e.g., "Python" vs "python", "React.js" vs "ReactJS")</li>
+                                    <li><strong>Lemmatization &amp; normalization:</strong> Standardize variations (e.g., &quot;Python&quot; vs &quot;python&quot;, &quot;React.js&quot; vs &quot;ReactJS&quot;)</li>
                                     <li><strong>Skill database:</strong> Curated list of +500 technical and soft skills for matching</li>
                                 </ul>
                             </div>
