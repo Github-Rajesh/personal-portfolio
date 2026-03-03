@@ -165,7 +165,7 @@ export default function NasiwakATSCaseStudy() {
                             </div>
 
                             <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 p-8 rounded-3xl border border-indigo-500/20">
-                                <h3 className="text-lg font-medium text-indigo-300 mb-4">Candidate Ranking & Scoring</h3>
+                                <h3 className="text-lg font-medium text-blue-300 mb-4">Candidate Ranking &amp; Scoring</h3>
                                 <ol className="space-y-2 list-decimal list-inside leading-relaxed">
                                     <li>Job description parsed into required skills, experience, and qualifications</li>
                                     <li><strong>Layer 1 - Keyword Matching:</strong> Direct skill overlap scoring</li>
@@ -370,7 +370,7 @@ export default function NasiwakATSCaseStudy() {
                         </p>
                         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-8">
                             <p className="text-base text-zinc-400 italic">
-                                <span className="text-blue-300 font-semibold">"</span>I engineered an intelligent resume matching system that combines multi-format document parsing with advanced NLP. The system extracts structured data from resumes, applies spaCy entity recognition, generates semantic embeddings for contextual matching, and uses AI for deeper analysis. I implemented smart deduplication to ensure data quality, built configurable scoring with multiple matching layers, and created comprehensive export pipelines. The result is a production-grade system that reduces hiring team workload while improving candidate evaluation accuracy.<span className="text-blue-300 font-semibold">"</span>
+                                <span className="text-blue-300 font-semibold">&quot;</span>I engineered an intelligent resume matching system that combines multi-format document parsing with advanced NLP. The system extracts structured data from resumes, applies spaCy entity recognition, generates semantic embeddings for contextual matching, and uses AI for deeper analysis. I implemented smart deduplication to ensure data quality, built configurable scoring with multiple matching layers, and created comprehensive export pipelines. The result is a production-grade system that reduces hiring team workload while improving candidate evaluation accuracy.<span className="text-blue-300 font-semibold">&quot;</span>
                             </p>
                         </div>
                     </motion.section>

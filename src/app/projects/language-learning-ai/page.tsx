@@ -57,7 +57,7 @@ export default function LanguageLearningAICaseStudy() {
                             A sophisticated multi-tenant enterprise chatbot application that serves as an intelligent knowledge base query system. Organizations can upload internal documents (PDFs, Excel, Word docs, and screenshots) and employees ask natural language questions to retrieve context-specific answers with visual references.
                         </p>
                         <p className="text-lg leading-relaxed text-zinc-300 mt-6">
-                            <span className="text-purple-300 font-semibold">Key Innovation:</span> Dual-model LLM architecture combining OpenAI's GPT-4o-mini for reasoning with RakutenAI 2.0 (Ollama) for natural Japanese language refinement—making it particularly valuable for Japanese-speaking organizations.
+                            <span className="text-purple-300 font-semibold">Key Innovation:</span> Dual-model LLM architecture combining OpenAI&apos;s GPT-4o-mini for reasoning with RakutenAI 2.0 (Ollama) for natural Japanese language refinement—making it particularly valuable for Japanese-speaking organizations.
                         </p>
                     </motion.section>
 
@@ -70,7 +70,7 @@ export default function LanguageLearningAICaseStudy() {
                     >
                         <h2 className="text-3xl font-semibold mb-8 border-b border-white/10 pb-4">Your Role & Responsibilities</h2>
                         <p className="text-lg leading-relaxed text-zinc-300 mb-6">
-                            You architected and implemented the <span className="text-purple-300 font-semibold">FastAPI RAG Service &amp; LLM Integration</span> - the core intelligence engine of the system. This is the most technically complex component that powers the entire chatbot's ability to understand questions and generate accurate, contextually-aware responses.
+                            You architected and implemented the <span className="text-purple-300 font-semibold">FastAPI RAG Service &amp; LLM Integration</span> - the core intelligence engine of the system. This is the most technically complex component that powers the entire chatbot&apos;s ability to understand questions and generate accurate, contextually-aware responses.
                         </p>
                         
                         <h3 className="text-2xl font-semibold text-purple-300 mb-6">FastAPI RAG Service (Primary Contribution - 100%)</h3>
@@ -160,7 +160,7 @@ export default function LanguageLearningAICaseStudy() {
                                 <h3 className="text-lg font-medium text-purple-300 mb-4">Document Indexing Process</h3>
                                 <ol className="space-y-2 list-decimal list-inside leading-relaxed">
                                     <li>Users upload documents (PDF, DOCX, XLSX, PNG, JPG) to S3</li>
-                                    <li>Django marks files as "PROCESSING" → "INDEXING"</li>
+                                    <li>Django marks files as &quot;PROCESSING&quot; → &quot;INDEXING&quot;</li>
                                     <li>FastAPI extracts text (PyPDF, python-docx, openpyxl)</li>
                                     <li>Intelligent chunking respecting document structure</li>
                                     <li>Each chunk receives semantic embeddings via OpenAI API</li>
@@ -380,7 +380,7 @@ export default function LanguageLearningAICaseStudy() {
                         </p>
                         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-8">
                             <p className="text-base text-zinc-400 italic">
-                                <span className="text-purple-300 font-semibold">"</span>I engineered a production-grade RAG system that combines OpenAI's GPT-4o-mini with local language models (RakutenAI 2.0) for Japanese refinement. The system extracts text from multiple document formats, creates semantic embeddings, performs vector similarity search, and generates context-aware responses with conversation memory. I implemented graceful fallbacks, caching, and token optimization to ensure reliability and cost-efficiency.<span className="text-purple-300 font-semibold">"</span>
+                                <span className="text-purple-300 font-semibold">&quot;</span>I engineered a production-grade RAG system that combines OpenAI&apos;s GPT-4o-mini with local language models (RakutenAI 2.0) for Japanese refinement. The system extracts text from multiple document formats, creates semantic embeddings, performs vector similarity search, and generates context-aware responses with conversation memory. I implemented graceful fallbacks, caching, and token optimization to ensure reliability and cost-efficiency.<span className="text-purple-300 font-semibold">&quot;</span>
                             </p>
                         </div>
                     </motion.section>
