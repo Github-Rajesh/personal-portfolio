@@ -5,8 +5,10 @@ Temporary utility to compress image frames in public/sequence.
 Examples:
   python scripts/tmp_compress_sequence.py
   python scripts/tmp_compress_sequence.py --in-place
+  python scripts/tmp_compress_sequence.py --colors 160 --in-place
+  python scripts/tmp_compress_sequence.py --format webp --webp-lossless --output public/sequence-webp
   python scripts/tmp_compress_sequence.py --format webp --quality 72 --output public/sequence-webp
-  python scripts/tmp_compress_sequence.py --max-dimension 1280 --colors 160
+  python scripts/tmp_compress_sequence.py --max-dimension 1280
 """
 
 from __future__ import annotations
@@ -61,27 +63,36 @@ def maybe_resize(image: Image.Image, max_dimension: int | None) -> Image.Image:
     return image
 
 
-def compress_to_png(image: Image.Image, output_path: Path, colors: int) -> None:
+def compress_to_png(image: Image.Image, output_path: Path, colors: int | None) -> None:
     if image.mode not in ("RGB", "RGBA"):
         image = image.convert("RGBA" if "A" in image.getbands() else "RGB")
 
-    # Quantization gives much better PNG size reduction for sequence frames.
+    # Default path is lossless PNG recompression.
+    if colors is None:
+        image.save(output_path, format="PNG", optimize=True, compress_level=9)
+        return
+
+    # Optional quantization (lossy) for stronger size reduction.
     quantized = image.quantize(colors=colors)
     quantized.save(output_path, format="PNG", optimize=True, compress_level=9)
 
 
-def compress_to_webp(image: Image.Image, output_path: Path, quality: int) -> None:
+def compress_to_webp(image: Image.Image, output_path: Path, quality: int, lossless: bool) -> None:
     if image.mode not in ("RGB", "RGBA"):
         image = image.convert("RGBA" if "A" in image.getbands() else "RGB")
-    image.save(output_path, format="WEBP", quality=quality, method=6)
+    if lossless:
+        image.save(output_path, format="WEBP", method=6, lossless=True)
+    else:
+        image.save(output_path, format="WEBP", quality=quality, method=6)
 
 
 def compress_file(
     source_path: Path,
     output_path: Path,
     output_format: str,
-    colors: int,
+    colors: int | None,
     quality: int,
+    webp_lossless: bool,
     max_dimension: int | None,
 ) -> tuple[int, int]:
     with Image.open(source_path) as img:
@@ -89,7 +100,7 @@ def compress_file(
         if output_format == "png":
             compress_to_png(working, output_path, colors)
         else:
-            compress_to_webp(working, output_path, quality)
+            compress_to_webp(working, output_path, quality, webp_lossless)
 
     return source_path.stat().st_size, output_path.stat().st_size
 
@@ -111,14 +122,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--colors",
         type=int,
-        default=192,
-        help="Palette color count for PNG quantization (default: 192).",
+        default=None,
+        help="Optional PNG palette color count (1-256). Omit to preserve quality.",
     )
     parser.add_argument(
         "--quality",
         type=int,
         default=72,
-        help="WEBP quality (1-100). Ignored for PNG.",
+        help="WEBP quality (1-100) when not using --webp-lossless.",
+    )
+    parser.add_argument(
+        "--webp-lossless",
+        action="store_true",
+        help="Encode WEBP in lossless mode (pixel-exact).",
     )
     parser.add_argument(
         "--max-dimension",
@@ -146,6 +162,14 @@ def main() -> int:
         print("--in-place is only supported with --format png")
         return 1
 
+    if args.colors is not None and not (1 <= args.colors <= 256):
+        print("--colors must be between 1 and 256")
+        return 1
+
+    if not (1 <= args.quality <= 100):
+        print("--quality must be between 1 and 100")
+        return 1
+
     files = sorted_images(input_dir)
     if not files:
         print(f"No supported images found in: {input_dir}")
@@ -163,6 +187,13 @@ def main() -> int:
 
     print(f"Processing {len(files)} files from: {input_dir}")
     print(f"Output format: {args.format}")
+    if args.format == "png":
+        mode = "lossy quantized PNG" if args.colors is not None else "lossless PNG recompression"
+        print(f"Mode: {mode}")
+    elif args.webp_lossless:
+        print("Mode: lossless WEBP")
+    else:
+        print(f"Mode: lossy WEBP (quality={args.quality})")
     if args.max_dimension:
         print(f"Max dimension: {args.max_dimension}px")
 
@@ -178,6 +209,7 @@ def main() -> int:
                 output_format=args.format,
                 colors=args.colors,
                 quality=args.quality,
+                webp_lossless=args.webp_lossless,
                 max_dimension=args.max_dimension,
             )
             total_before += before
