@@ -1,19 +1,20 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
-import { useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useRef, useEffect, useCallback, useState } from "react";
+import { useScroll, useTransform, useMotionValueEvent, useMotionValue } from "framer-motion";
 import Overlay from "./Overlay";
 
 const FRAME_COUNT = 240;
-const PRELOAD_RADIUS = 12;
-const MAX_CONCURRENT_REQUESTS = 6;
+const MAX_CONCURRENT_REQUESTS = 10;
 
 export default function ScrollyCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [allFramesLoaded, setAllFramesLoaded] = useState(false);
 
   const mountedRef = useRef(false);
   const currentFrameRef = useRef(0);
+  const loadedCountRef = useRef(0);
 
   const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
   const loadedRef = useRef<boolean[]>([]);
@@ -22,6 +23,7 @@ export default function ScrollyCanvas() {
   const queueRef = useRef<number[]>([]);
   const queuedRef = useRef<Set<number>>(new Set());
   const activeLoadsRef = useRef(0);
+  const frozenProgress = useMotionValue(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -30,35 +32,11 @@ export default function ScrollyCanvas() {
 
   const currentIndex = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
-  const findNearestLoadedFrame = useCallback((targetIndex: number) => {
-    if (loadedRef.current[targetIndex]) {
-      return targetIndex;
-    }
-
-    for (let offset = 1; offset < FRAME_COUNT; offset++) {
-      const previous = targetIndex - offset;
-      const next = targetIndex + offset;
-
-      if (previous >= 0 && loadedRef.current[previous]) {
-        return previous;
-      }
-      if (next < FRAME_COUNT && loadedRef.current[next]) {
-        return next;
-      }
-    }
-
-    return -1;
-  }, []);
-
   const renderFrame = useCallback(
-    (targetIndex: number) => {
+    (index: number) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
-
-      const frameToRender = findNearestLoadedFrame(targetIndex);
-      if (frameToRender === -1) return;
-
-      const img = imagesRef.current[frameToRender];
+      const img = imagesRef.current[index];
       if (!img) return;
 
       const ctx = canvas.getContext("2d");
@@ -83,7 +61,7 @@ export default function ScrollyCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     },
-    [findNearestLoadedFrame]
+    []
   );
 
   const enqueueFrame = useCallback((index: number, highPriority = false) => {
@@ -124,7 +102,16 @@ export default function ScrollyCanvas() {
 
         imagesRef.current[index] = img;
         loadedRef.current[index] = true;
-        renderFrame(currentFrameRef.current);
+        loadedCountRef.current += 1;
+
+        if (index === 0) {
+          renderFrame(0);
+        }
+
+        if (loadedCountRef.current === FRAME_COUNT) {
+          setAllFramesLoaded(true);
+        }
+
         drainQueue();
       };
 
@@ -136,21 +123,11 @@ export default function ScrollyCanvas() {
     }
   }, [renderFrame]);
 
-  const preloadAround = useCallback(
-    (center: number) => {
-      enqueueFrame(center, true);
-      for (let offset = 1; offset <= PRELOAD_RADIUS; offset++) {
-        enqueueFrame(center + offset);
-        enqueueFrame(center - offset);
-      }
-      drainQueue();
-    },
-    [drainQueue, enqueueFrame]
-  );
-
   useEffect(() => {
     mountedRef.current = true;
     currentFrameRef.current = 0;
+    loadedCountRef.current = 0;
+    setAllFramesLoaded(false);
 
     imagesRef.current = Array.from({ length: FRAME_COUNT }, () => null);
     loadedRef.current = Array.from({ length: FRAME_COUNT }, () => false);
@@ -165,18 +142,27 @@ export default function ScrollyCanvas() {
       canvas.height = window.innerHeight;
     }
 
-    preloadAround(0);
+    enqueueFrame(0, true);
+    for (let i = 1; i < FRAME_COUNT; i++) {
+      enqueueFrame(i);
+    }
+    drainQueue();
 
     return () => {
       mountedRef.current = false;
     };
-  }, [preloadAround]);
+  }, [drainQueue, enqueueFrame]);
+
+  useEffect(() => {
+    if (!allFramesLoaded) return;
+    renderFrame(currentFrameRef.current);
+  }, [allFramesLoaded, renderFrame]);
 
   useMotionValueEvent(currentIndex, "change", (latest) => {
     const nextFrame = Math.max(0, Math.min(FRAME_COUNT - 1, Math.round(latest)));
     currentFrameRef.current = nextFrame;
+    if (!allFramesLoaded) return;
     renderFrame(nextFrame);
-    preloadAround(nextFrame);
   });
 
   useEffect(() => {
@@ -186,19 +172,24 @@ export default function ScrollyCanvas() {
 
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      renderFrame(currentFrameRef.current);
+
+      if (allFramesLoaded) {
+        renderFrame(currentFrameRef.current);
+      } else {
+        renderFrame(0);
+      }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [renderFrame]);
+  }, [allFramesLoaded, renderFrame]);
 
   return (
     <div ref={containerRef} className="relative z-10 h-[800vh] w-full bg-[#121212] pointer-events-none">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
         <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-        <Overlay scrollYProgress={scrollYProgress} />
+        <Overlay scrollYProgress={allFramesLoaded ? scrollYProgress : frozenProgress} />
       </div>
     </div>
   );
