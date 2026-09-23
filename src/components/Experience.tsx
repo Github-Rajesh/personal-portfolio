@@ -4,9 +4,16 @@ import { motion } from "framer-motion";
 
 const experiences = [
     {
+        role: "AI/ML Engineer",
+        company: "Experis IT Services US, LLC",
+        period: "Sep 2026 - Present",
+        description: "Engaged through Infosys, working with client BNY on AI/ML engineering initiatives.",
+        skills: ["Machine Learning", "AI Engineering", "Python"]
+    },
+    {
         role: "Senior Machine Learning Engineer",
         company: "Nasiwak Services",
-        period: "Oct 2025 - Present",
+        period: "Oct 2025 - Sep 2026",
         description: "Leading machine learning engineering initiatives, driving the architecture and implementation of advanced machine learning solutions.",
         skills: ["Machine Learning", "Python", "Engineering"]
     },
