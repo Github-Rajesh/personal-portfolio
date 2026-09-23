@@ -3,7 +3,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/sequence/:path*",
+        source: "/sequence-webp/:path*",
         headers: [
           {
             key: "Cache-Control",
